@@ -3,13 +3,24 @@ package main
 import (
 	"fmt"
 
-	"github.com/myuser/calculator"
-	"rsc.io/quote"
 )
 
 func main()  {
-	total := calculator.Sum(3, 5)
-	fmt.Println(total)
-	fmt.Println("Version: ", calculator.Version)
-	fmt.Println(quote.Hello())
+	x := 27
+	if x % 2 == 0 {
+		fmt.Println(x, "is even")
+	} else {
+		fmt.Println(x) 
+	}
+
+	switch num := 15; {
+	case num < 50:
+		fmt.Println("%d is less then 50\n", num)
+		fallthrough
+	case num > 100:
+		fmt.Println("%d is less then 100\n", num)
+		fallthrough
+	case num < 200:
+		fmt.Println("%d is less then 200\n", num)
+	}
 }
