@@ -16,12 +16,33 @@ func main()  {
 	// createfile()
 	// highlow(2, 0)
 	// fizzBuzz()
-	fmt.Println("Program number less than 20")
+	// fmt.Println("Program number less than 20")
 
-	for number := 1; number <= 20; number++ {
-		if findprimes(number) {
-			fmt.Printf("%v ", number)
-		}
+	// for number := 1; number <= 20; number++ {
+	// 	if findprimes(number) {
+	// 		fmt.Printf("%v ", number)
+	// 	}
+	// }
+
+	panic()
+}
+
+func panic() string {
+	val := 0
+
+	for {
+			fmt.Print("Enter number: ")
+			fmt.Scanf("%d", &val)
+
+			switch {
+			case val < 0:
+				fmt.Println("Panic!")
+				panic("You entered a negative number!")
+			case val == 0:
+					fmt.Println("0 is neither negative nor positive")
+			default:
+					fmt.Println("You entered:", val)
+			}
 	}
 }
 
@@ -53,18 +74,18 @@ func main()  {
 // 	}
 // }
 
-func findprimes(number int) bool {
-	for i := 2; i < number; i++ {
-		if number % i == 0 {
-			return false
-		}
-	}
-	if number > 1 {
-		return true
-	} else {
-		return false
-	}
-}
+// func findprimes(number int) bool {
+// 	for i := 2; i < number; i++ {
+// 		if number % i == 0 {
+// 			return false
+// 		}
+// 	}
+// 	if number > 1 {
+// 		return true
+// 	} else {
+// 		return false
+// 	}
+// }
 
 // func createfile()  {
 // 	newfile, error := os.Create("learnGo.txt")
