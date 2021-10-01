@@ -14,9 +14,8 @@ func main()  {
 	}()
 
 	// createfile()
-
 	// highlow(2, 0)
-	// fizzBuzz()
+	fizzBuzz()
 	// fmt.Println("Program number less than 20")
 
 	// for number := 1; number <= 20; number++ {
@@ -27,32 +26,32 @@ func main()  {
 }
 
 // 例外処理
-func highlow(high int, low int)  {
-	if high < low {
-		fmt.Println("Panic!")
-		panic("highlow() low greater than high")
-	}
-
-	defer fmt.Println("Deferred: highlow(", high, ",", low, ",")
-	fmt.Println("Call: highlow(", high, ",", low, ")")
-
-	highlow(high, low + 1)
-}
-
-// func fizzBuzz()  {
-// 	for i := 1; i < 100; i++ {
-// 		switch {
-// 		case i % 3 == 0 && i % 5 == 0:
-// 			fmt.Println("FizzBuzz")
-// 		case i % 3 == 0:
-// 			fmt.Println("Fizz")
-// 		case i % 5 == 0:
-// 			fmt.Println("Buzz")
-// 		default:
-// 			fmt.Println(i)
-// 		}
+// func highlow(high int, low int)  {
+// 	if high < low {
+// 		fmt.Println("Panic!")
+// 		panic("highlow() low greater than high")
 // 	}
+
+// 	defer fmt.Println("Deferred: highlow(", high, ",", low, ",")
+// 	fmt.Println("Call: highlow(", high, ",", low, ")")
+
+// 	highlow(high, low + 1)
 // }
+
+func fizzBuzz()  {
+	for i := 1; i < 100; i++ {
+		switch {
+		case i % 3 == 0 && i % 5 == 0:
+			fmt.Println("FizzBuzz")
+		case i % 3 == 0:
+			fmt.Println("Fizz")
+		case i % 5 == 0:
+			fmt.Println("Buzz")
+		default:
+			fmt.Println(i)
+		}
+	}
+}
 
 // func findprimes(number int) bool {
 // 	for i := 2; i < number; i++ {
