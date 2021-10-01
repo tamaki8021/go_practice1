@@ -15,14 +15,14 @@ func main()  {
 
 	// createfile()
 	// highlow(2, 0)
-	fizzBuzz()
-	// fmt.Println("Program number less than 20")
+	// fizzBuzz()
+	fmt.Println("Program number less than 20")
 
-	// for number := 1; number <= 20; number++ {
-	// 	if findprimes(number) {
-	// 		fmt.Printf("%v ", number)
-	// 	}
-	// }
+	for number := 1; number <= 20; number++ {
+		if findprimes(number) {
+			fmt.Printf("%v ", number)
+		}
+	}
 }
 
 // 例外処理
@@ -38,33 +38,33 @@ func main()  {
 // 	highlow(high, low + 1)
 // }
 
-func fizzBuzz()  {
-	for i := 1; i < 100; i++ {
-		switch {
-		case i % 3 == 0 && i % 5 == 0:
-			fmt.Println("FizzBuzz")
-		case i % 3 == 0:
-			fmt.Println("Fizz")
-		case i % 5 == 0:
-			fmt.Println("Buzz")
-		default:
-			fmt.Println(i)
-		}
-	}
-}
-
-// func findprimes(number int) bool {
-// 	for i := 2; i < number; i++ {
-// 		if number % i == 0 {
-// 			return false
+// func fizzBuzz()  {
+// 	for i := 1; i < 100; i++ {
+// 		switch {
+// 		case i % 3 == 0 && i % 5 == 0:
+// 			fmt.Println("FizzBuzz")
+// 		case i % 3 == 0:
+// 			fmt.Println("Fizz")
+// 		case i % 5 == 0:
+// 			fmt.Println("Buzz")
+// 		default:
+// 			fmt.Println(i)
 // 		}
 // 	}
-// 	if number > 1 {
-// 		return true
-// 	} else {
-// 		return false
-// 	}
 // }
+
+func findprimes(number int) bool {
+	for i := 2; i < number; i++ {
+		if number % i == 0 {
+			return false
+		}
+	}
+	if number > 1 {
+		return true
+	} else {
+		return false
+	}
+}
 
 // func createfile()  {
 // 	newfile, error := os.Create("learnGo.txt")
