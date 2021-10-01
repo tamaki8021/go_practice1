@@ -24,27 +24,27 @@ func main()  {
 	// 	}
 	// }
 
-	panic()
+	// panic()
 }
 
-func panic() string {
-	val := 0
+// func panic() string {
+// 	val := 0
 
-	for {
-			fmt.Print("Enter number: ")
-			fmt.Scanf("%d", &val)
+// 	for {
+// 			fmt.Print("Enter number: ")
+// 			fmt.Scanf("%d", &val)
 
-			switch {
-			case val < 0:
-				fmt.Println("Panic!")
-				panic("You entered a negative number!")
-			case val == 0:
-					fmt.Println("0 is neither negative nor positive")
-			default:
-					fmt.Println("You entered:", val)
-			}
-	}
-}
+// 			switch {
+// 			case val < 0:
+// 				fmt.Println("Panic!")
+// 				panic("You entered a negative number!")
+// 			case val == 0:
+// 					fmt.Println("0 is neither negative nor positive")
+// 			default:
+// 					fmt.Println("You entered:", val)
+// 			}
+// 	}
+// }
 
 // 例外処理
 // func highlow(high int, low int)  {
