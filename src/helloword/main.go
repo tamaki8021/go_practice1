@@ -15,8 +15,22 @@ func main()  {
 			}
 	}()
 
-	array()
-	arrays()
+
+	sliceCopy()
+}
+
+func sliceCopy()  {
+	letters := []string{"A", "B", "C", "D"}
+	fmt.Println("Before", letters)
+
+	slice1 := letters[0:2]
+	slice2 := make([]string, 3)
+	copy(slice2, letters[1:4])
+
+	slice1[1] = "Z"
+
+	fmt.Println("After", letters)
+	fmt.Println("Bfter", slice2)
 }
 
 func arrays()  {
