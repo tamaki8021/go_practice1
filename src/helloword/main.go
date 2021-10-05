@@ -15,8 +15,25 @@ func main()  {
 			}
 	}()
 
+	fmap()
+}
 
-	sliceCopy()
+func fmap()  {
+	studentsAge := make(map[string]int)
+	studentsAge["john"] = 32
+	fmt.Println(studentsAge)
+	fmt.Println(studentsAge["john"])
+
+	age, exist := studentsAge["chi"]
+	if exist {
+		fmt.Println(age)
+	} else {
+		fmt.Println("couldn'T be found")
+	}
+
+	for name, age := range studentsAge {
+		fmt.Printf("%s\t%d\n", name, age)
+	}
 }
 
 func sliceCopy()  {
