@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -15,7 +16,38 @@ func main()  {
 			}
 	}()
 
-	fmap()
+	employee()
+}
+
+type Parson struct {
+	ID int
+	FirstName string `json: "name"`
+	LastName string
+	Address string `json: "address,omitempty"`
+}
+
+type Employee struct {
+	Parson
+	ManagerID int
+}
+
+func employee()  {
+	employees := []Employee{
+		{Parson: Parson{LastName: "Done", FirstName: "Johe"}}, {
+			Parson:    Parson{LastName: "Cambell", FirstName: "Devid"},
+			ManagerID: 0,
+		}}
+
+	data, _ := json.Marshal(employees)
+	fmt.Println(data)
+
+	var decoded []Employee
+	json.Unmarshal(data, &decoded)
+	fmt.Printf("%v", decoded)
+
+	// employeCopy := &employe
+	// employeCopy.FirstName = "David"
+	fmt.Println(employees)
 }
 
 func fmap()  {
