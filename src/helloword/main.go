@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"strings"
 	// "time"
@@ -42,6 +43,23 @@ type coloredTriangle struct {
 	color string
 }
 
+type Shape interface {
+	Perimeter() float64
+	Area() float64
+}
+
+type Square struct {
+	size float64
+}
+
+type Circle struct {
+	radius float64
+}
+
+type Stringer interface {
+	String() string
+}
+
 func main()  {
 	// 例外処理
 	// defer func()  {
@@ -77,13 +95,41 @@ func main()  {
 	// fmt.Println("Perimeter:", t.perimeter())
 	// fmt.Println("Perimeter(square):", s.perimeter())
 
-	s := upperstring("Learning Go!")
-	fmt.Println(s)
-	fmt.Println(s.Upper())
+	// s := upperstring("Learning Go!")
+	// fmt.Println(s)
+	// fmt.Println(s.Upper())
 
-	t := coloredTriangle{triangle{3}, "blue"}
-	fmt.Println("Size:", t.size)
-	fmt.Println("Perimeter:", t.perimeter())
+	// t := coloredTriangle{triangle{3}, "blue"}
+	// fmt.Println("Size:", t.size)
+	// fmt.Println("Perimeter:", t.perimeter())
+
+	var s Shape = Square{3}
+	printInfomation(s)
+
+	c := Circle{3}
+	printInfomation(c)
+}
+
+func printInfomation(s Shape)  {
+	fmt.Printf("%T\n", s)
+	fmt.Println("Area: ", s.Area())
+	fmt.Println("Perimeter: ", s.Perimeter())
+}
+
+func (c Circle) Area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+
+func (c Circle) Perimeter() float64 {
+	return 2 * math.Pi * c.radius
+}
+
+func (s Square) Area() float64 {
+	return s.size * s.size
+}
+
+func (s Square) Perimeter() float64 {
+	return s.size * 4
 }
 
 func (s upperstring) Upper() string {
