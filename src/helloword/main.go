@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
+	"strings"
 	// "time"
 	// "log"
 )
@@ -27,34 +27,78 @@ type Employee struct {
 	// ManagerID int
 }
 
+type triangle struct {
+	size int
+}
+
+type square struct {
+	size int
+}
+
+type upperstring string
+
+type coloredTriangle struct {
+	triangle
+	color string
+}
 
 func main()  {
 	// 例外処理
-	defer func()  {
-		handler := recover()
-			if handler != nil {
-				fmt.Println("main(): recover", handler)
-			}
-	}()
+	// defer func()  {
+	// 	handler := recover()
+	// 		if handler != nil {
+	// 			fmt.Println("main(): recover", handler)
+	// 		}
+	// }()
 
 	// 呼び出し元でのエラー処理
-	employee, err := getInformation(1001)
-	if errors.Is(err, ErrNotFound) {
-		fmt.Printf("NOT FOUND: %v\n", err)
-	} else {
-		fmt.Print(employee)
-	}
+	// employee, err := getInformation(1001)
+	// if errors.Is(err, ErrNotFound) {
+	// 	fmt.Printf("NOT FOUND: %v\n", err)
+	// } else {
+	// 	fmt.Print(employee)
+	// }
 
-	file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// ログをファイルに抽出
+	// file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	defer file.Close()
+	// defer file.Close()
 
-	log.SetOutput(file)
-	log.Print("Hey, I'm a log!")
+	// log.SetOutput(file)
+	// log.Print("Hey, I'm a log!")
 
+	// t := triangle{3}
+	// s := square{4}
+	// t.doubleSize()
+	// fmt.Println("Size:", t.size)
+	// fmt.Println("Perimeter:", t.perimeter())
+	// fmt.Println("Perimeter(square):", s.perimeter())
+
+	s := upperstring("Learning Go!")
+	fmt.Println(s)
+	fmt.Println(s.Upper())
+
+	t := coloredTriangle{triangle{3}, "blue"}
+	fmt.Println("Size:", t.size)
+	fmt.Println("Perimeter:", t.perimeter())
+}
+
+func (s upperstring) Upper() string {
+	return strings.ToUpper(string(s))
+}
+
+func (t *triangle) doubleSize() {
+	t.size *= 2
+}
+
+func (s square) perimeter() int {
+	return s.size * 4
+}
+func (t triangle) perimeter() int {
+	return t.size * 3
 }
 
 var ErrNotFound = errors.New("Employee not found!")
