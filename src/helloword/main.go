@@ -1,11 +1,32 @@
 package main
 
 import (
-	"encoding/json"
+	// "encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	// "time"
+	// "log"
 )
+
+type Parson struct {
+	ID int
+	FirstName string `json: "name"`
+	LastName string
+	Address string `json: "address,omitempty"`
+}
+
+type Employee struct {
+	ID int
+	FirstName string 
+	LastName string
+	Address string 
+	// Parson
+	// ManagerID int
+}
+
 
 func main()  {
 	// 例外処理
@@ -16,10 +37,52 @@ func main()  {
 			}
 	}()
 
-	var num int
+	// 呼び出し元でのエラー処理
+	employee, err := getInformation(1001)
+	if errors.Is(err, ErrNotFound) {
+		fmt.Printf("NOT FOUND: %v\n", err)
+	} else {
+		fmt.Print(employee)
+	}
 
-	fmt.Scanln(&num)
-	fibonacci(num)
+	file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+
+	log.SetOutput(file)
+	log.Print("Hey, I'm a log!")
+
+}
+
+var ErrNotFound = errors.New("Employee not found!")
+
+func getInformation(id int) (*Employee, error) {
+	if id != 1001 {
+		return nil, ErrNotFound
+	}
+
+	employee := Employee{LastName: "Doe", FirstName: "John"}
+	return &employee, nil
+
+	// 一時的なエラーの場合に、再試行ロジックを実行する方法
+	// for tries := 0; tries < 3; tries++ {
+	// 	employee, err := apiCallEmpoyee(1000)
+	// 	if err == nil {
+	// 		return employee, nil
+	// 	}
+
+	// 	fmt.Println("Server is not responding, retrying ...")
+	// 	time.Sleep(time.Second * 2)
+	// }
+	// return nil, fmt.Errorf("server has failed to respond to get the employee information")
+}
+
+func apiCallEmpoyee(id int) (*Employee, error) {
+	employee := Employee{LastName: "Doe", FirstName: "John"}
+	return &employee, nil
 }
 
 // フィボナッチ配列
@@ -38,36 +101,24 @@ func fibonacci(n int) []int {
 	return nums
 }
 
-type Parson struct {
-	ID int
-	FirstName string `json: "name"`
-	LastName string
-	Address string `json: "address,omitempty"`
-}
+// func employee()  {
+// 	employees := []Employee{
+// 		{Parson: Parson{LastName: "Done", FirstName: "Johe"}}, {
+// 			Parson:    Parson{LastName: "Cambell", FirstName: "Devid"},
+// 			ManagerID: 0,
+// 		}}
 
-type Employee struct {
-	Parson
-	ManagerID int
-}
+// 	data, _ := json.Marshal(employees)
+// 	fmt.Println(data)
 
-func employee()  {
-	employees := []Employee{
-		{Parson: Parson{LastName: "Done", FirstName: "Johe"}}, {
-			Parson:    Parson{LastName: "Cambell", FirstName: "Devid"},
-			ManagerID: 0,
-		}}
+// 	var decoded []Employee
+// 	json.Unmarshal(data, &decoded)
+// 	fmt.Printf("%v", decoded)
 
-	data, _ := json.Marshal(employees)
-	fmt.Println(data)
-
-	var decoded []Employee
-	json.Unmarshal(data, &decoded)
-	fmt.Printf("%v", decoded)
-
-	// employeCopy := &employe
-	// employeCopy.FirstName = "David"
-	fmt.Println(employees)
-}
+// 	employeCopy := &employe
+// 	employeCopy.FirstName = "David"
+// 	fmt.Println(employees)
+// }
 
 func fmap()  {
 	studentsAge := make(map[string]int)
