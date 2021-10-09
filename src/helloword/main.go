@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"math"
+	"net/http"
 	"os"
 	"strings"
 	// "time"
@@ -60,6 +62,10 @@ type Stringer interface {
 	String() string
 }
 
+type dollars float32
+
+type database map[string]dollars
+
 func main()  {
 	// 例外処理
 	// defer func()  {
@@ -108,6 +114,19 @@ func main()  {
 
 	c := Circle{3}
 	printInfomation(c)
+
+	db := database{"Go T-Shirt": 25, "Go Jacket": 55}
+	log.Fatal(http.ListenAndServe("localhost:8000", db))
+}
+
+func (d dollars) String() string {
+	return fmt.Sprintf("$%.2f", d)
+}
+
+func (db database) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	for item, price := range db {
+		fmt.Fprintf(w, "%s: %s\n", item, price)
+	}
 }
 
 func printInfomation(s Shape)  {
