@@ -5,8 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
+	// "log"
+	"math"
+	"net/http"
 	"os"
+	"strings"
 	// "time"
 	// "log"
 )
@@ -27,34 +30,203 @@ type Employee struct {
 	// ManagerID int
 }
 
+type triangle struct {
+	size int
+}
+
+type square struct {
+	size int
+}
+
+type upperstring string
+
+type coloredTriangle struct {
+	triangle
+	color string
+}
+
+type Shape interface {
+	Perimeter() float64
+	Area() float64
+}
+
+type Square struct {
+	size float64
+}
+
+type Circle struct {
+	radius float64
+}
+
+type Stringer interface {
+	String() string
+}
+
+type dollars float32
+
+type database map[string]dollars
+
+type Account struct {
+	FirstName string 
+	LastName string
+}
+
+type Employee1 struct {
+	Account
+	Credit float64
+}
 
 func main()  {
 	// 例外処理
-	defer func()  {
-		handler := recover()
-			if handler != nil {
-				fmt.Println("main(): recover", handler)
-			}
-	}()
+	// defer func()  {
+	// 	handler := recover()
+	// 		if handler != nil {
+	// 			fmt.Println("main(): recover", handler)
+	// 		}
+	// }()
 
 	// 呼び出し元でのエラー処理
-	employee, err := getInformation(1001)
-	if errors.Is(err, ErrNotFound) {
-		fmt.Printf("NOT FOUND: %v\n", err)
-	} else {
-		fmt.Print(employee)
-	}
+	// employee, err := getInformation(1001)
+	// if errors.Is(err, ErrNotFound) {
+	// 	fmt.Printf("NOT FOUND: %v\n", err)
+	// } else {
+	// 	fmt.Print(employee)
+	// }
 
-	file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	// ログをファイルに抽出
+	// file, err := os.OpenFile("info.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// defer file.Close()
+
+	// log.SetOutput(file)
+	// log.Print("Hey, I'm a log!")
+
+	// t := triangle{3}
+	// s := square{4}
+	// t.doubleSize()
+	// fmt.Println("Size:", t.size)
+	// fmt.Println("Perimeter:", t.perimeter())
+	// fmt.Println("Perimeter(square):", s.perimeter())
+
+	// s := upperstring("Learning Go!")
+	// fmt.Println(s)
+	// fmt.Println(s.Upper())
+
+	// t := coloredTriangle{triangle{3}, "blue"}
+	// fmt.Println("Size:", t.size)
+	// fmt.Println("Perimeter:", t.perimeter())
+
+	// var s Shape = Square{3}
+	// printInfomation(s)
+
+	// c := Circle{3}
+	// printInfomation(c)
+
+	// db := database{"Go T-Shirt": 25, "Go Jacket": 55}
+	// log.Fatal(http.ListenAndServe("localhost:8000", db))
+
+	bruce, _ := CreateEmployee("Bruce", "Lee", 500)
+	fmt.Println(bruce.ChekCredits())
+	credits, err := bruce.AddCredits(250)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("New Credits Balance = ", credits)
 	}
 
-	defer file.Close()
+	_, err = bruce.RemoveCredits(2500)
+	if err != nil {
+		fmt.Println("Can't withdraw or overdrawn!", err)
+	}
 
-	log.SetOutput(file)
-	log.Print("Hey, I'm a log!")
+	bruce.ChangeName("Mark")
 
+	fmt.Println(bruce)
+}
+
+func (a *Account) ChangeName(newname string) {
+	a.FirstName = newname
+}
+
+func (e Employee1) String() string {
+	return fmt.Sprintf("Name: %s %s\nCredits: %.2f\n", e.FirstName, e.LastName, e.Credit)
+}
+
+func CreateEmployee(FirstName, lastName string, credits float64) (*Employee1, error) {
+	return &Employee1{Account{FirstName, lastName}, credits}, nil
+}
+
+func (e * Employee1) AddCredits(amount float64) (float64, error) {
+	if amount > 0.0 {
+		e.Credit += amount
+		return e.Credit, nil
+	}
+	return 0.0, errors.New("Invalid credit amount.")
+}
+
+func (e *Employee1) RemoveCredits(amount float64) (float64, error) {
+	if amount > 0.0 {
+		if amount <= e.Credit {
+			e.Credit -= amount
+			return e.Credit, nil
+		}
+		return 0.0, errors.New("You can't more credits than the account has.")
+	}
+	return 0.0, errors.New("You can't remove negative numbers.")
+}
+
+func (e *Employee1) ChekCredits() float64 {
+	return e.Credit
+}
+
+func (d dollars) String() string {
+	return fmt.Sprintf("$%.2f", d)
+}
+
+func (db database) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	for item, price := range db {
+		fmt.Fprintf(w, "%s: %s\n", item, price)
+	}
+}
+
+func printInfomation(s Shape)  {
+	fmt.Printf("%T\n", s)
+	fmt.Println("Area: ", s.Area())
+	fmt.Println("Perimeter: ", s.Perimeter())
+}
+
+func (c Circle) Area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+
+func (c Circle) Perimeter() float64 {
+	return 2 * math.Pi * c.radius
+}
+
+func (s Square) Area() float64 {
+	return s.size * s.size
+}
+
+func (s Square) Perimeter() float64 {
+	return s.size * 4
+}
+
+func (s upperstring) Upper() string {
+	return strings.ToUpper(string(s))
+}
+
+func (t *triangle) doubleSize() {
+	t.size *= 2
+}
+
+func (s square) perimeter() int {
+	return s.size * 4
+}
+func (t triangle) perimeter() int {
+	return t.size * 3
 }
 
 var ErrNotFound = errors.New("Employee not found!")
