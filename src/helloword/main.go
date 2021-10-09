@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
+	// "log"
 	"math"
 	"net/http"
 	"os"
@@ -66,6 +66,16 @@ type dollars float32
 
 type database map[string]dollars
 
+type Account struct {
+	FirstName string 
+	LastName string
+}
+
+type Employee1 struct {
+	Account
+	Credit float64
+}
+
 func main()  {
 	// 例外処理
 	// defer func()  {
@@ -109,14 +119,67 @@ func main()  {
 	// fmt.Println("Size:", t.size)
 	// fmt.Println("Perimeter:", t.perimeter())
 
-	var s Shape = Square{3}
-	printInfomation(s)
+	// var s Shape = Square{3}
+	// printInfomation(s)
 
-	c := Circle{3}
-	printInfomation(c)
+	// c := Circle{3}
+	// printInfomation(c)
 
-	db := database{"Go T-Shirt": 25, "Go Jacket": 55}
-	log.Fatal(http.ListenAndServe("localhost:8000", db))
+	// db := database{"Go T-Shirt": 25, "Go Jacket": 55}
+	// log.Fatal(http.ListenAndServe("localhost:8000", db))
+
+	bruce, _ := CreateEmployee("Bruce", "Lee", 500)
+	fmt.Println(bruce.ChekCredits())
+	credits, err := bruce.AddCredits(250)
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("New Credits Balance = ", credits)
+	}
+
+	_, err = bruce.RemoveCredits(2500)
+	if err != nil {
+		fmt.Println("Can't withdraw or overdrawn!", err)
+	}
+
+	bruce.ChangeName("Mark")
+
+	fmt.Println(bruce)
+}
+
+func (a *Account) ChangeName(newname string) {
+	a.FirstName = newname
+}
+
+func (e Employee1) String() string {
+	return fmt.Sprintf("Name: %s %s\nCredits: %.2f\n", e.FirstName, e.LastName, e.Credit)
+}
+
+func CreateEmployee(FirstName, lastName string, credits float64) (*Employee1, error) {
+	return &Employee1{Account{FirstName, lastName}, credits}, nil
+}
+
+func (e * Employee1) AddCredits(amount float64) (float64, error) {
+	if amount > 0.0 {
+		e.Credit += amount
+		return e.Credit, nil
+	}
+	return 0.0, errors.New("Invalid credit amount.")
+}
+
+func (e *Employee1) RemoveCredits(amount float64) (float64, error) {
+	if amount > 0.0 {
+		if amount <= e.Credit {
+			e.Credit -= amount
+			return e.Credit, nil
+		}
+		return 0.0, errors.New("You can't more credits than the account has.")
+	}
+	return 0.0, errors.New("You can't remove negative numbers.")
+}
+
+func (e *Employee1) ChekCredits() float64 {
+	return e.Credit
 }
 
 func (d dollars) String() string {
