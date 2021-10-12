@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand"
 	"time"
 
 	// "log"
@@ -78,20 +79,33 @@ type Employee1 struct {
 }
 
 func main()  {
-	ch1 := make(chan string)
-	ch2 := make(chan string)
+	start := time.Now()
 
-	go process(ch1)
-	go replicate(ch2)
+	size := 15
+	ch := make(chan string, size)
 
-	for i := 0; i < 2; i++ {
-		select {
-		case process := <-ch1:
-			fmt.Println(process)
-		case replicate := <-ch2:
-			fmt.Println(replicate)
-		}
+	for i := 0; i < size; i++ {
+		go fib(float64(i), ch)
 	}
+
+	for i := 0; i < size; i++ {
+		fmt.Printf(<-ch)
+	}
+
+	elapsed := time.Since(start)
+	fmt.Printf("Done! It took %v seconds!\n", elapsed.Seconds())
+}
+
+func fib(number float64, ch chan string) {
+	x, y := 1.0, 1.0
+	for i := 0; i < int(number); i++ {
+		x, y = y, x+y
+	}
+
+	r := rand.Intn(3)
+	time.Sleep(time.Duration(r) * time.Second)
+
+	ch <- fmt.Sprintf("Fib(%v): %v\n", number, x)
 }
 
 func process(ch chan string)  {
