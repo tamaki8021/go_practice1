@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
+
 	// "log"
 	"math"
 	"net/http"
 	"os"
 	"strings"
-	"time"
 	// "log"
 )
 
@@ -77,28 +77,23 @@ type Employee1 struct {
 }
 
 func main()  {
-	ch := make(chan string)
+	size := 2
+	ch := make(chan string, size)
+	send(ch, "one")
+	send(ch, "two")
+	go send(ch, "three")
+	go send(ch, "fout")
+	fmt.Println("All data sent to the channel ...")
 
-	start := time.Now()
-	apis := []string{
-		"https://management.azure.com",
-		"https://dev.azure.com",
-		"https://api.github.com",
-		"https://outlook.office.com/",
-		"https://api.somewhereintheinternet.com/",
-		"https://graph.microsoft.com",
+	for i := 0; i < 4; i++ {
+		fmt.Println(<-ch)
 	}
 
-	for _, api := range apis {
-		go checkAPI(api, ch)
-	}
+	fmt.Println("Done!")
+}
 
-	for i := 0; i < len(apis); i++ {
-		fmt.Print(<-ch)
-	}
-
-	elapsed := time.Since(start)
-	fmt.Printf("Done! It took %v seconds!\n", elapsed.Seconds())	
+func send(ch chan string, message string)  {
+	ch <- message
 }
 
 func checkAPI(api string, ch chan string)  {
