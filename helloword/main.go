@@ -79,20 +79,19 @@ type Employee1 struct {
 func main()  {
 	size := 2
 	ch := make(chan string, size)
-	send(ch, "one")
-	send(ch, "two")
-	go send(ch, "three")
-	go send(ch, "fout")
-	fmt.Println("All data sent to the channel ...")
+	send(ch, "hellow world!")
+	read(ch)
 
-	for i := 0; i < 4; i++ {
-		fmt.Println(<-ch)
-	}
-
-	fmt.Println("Done!")
 }
 
-func send(ch chan string, message string)  {
+// it's a channel to only receive data
+func read(ch <-chan string)  {
+	fmt.Printf("Recceiving: %#v\n", <-ch)
+}
+
+// it's a channel to only send data
+func send(ch chan<- string, message string)  {
+	fmt.Printf("Sending:: %#v\n", message)
 	ch <- message
 }
 
