@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"time"
 
 	// "log"
 	"math"
@@ -77,11 +78,30 @@ type Employee1 struct {
 }
 
 func main()  {
-	size := 2
-	ch := make(chan string, size)
-	send(ch, "hellow world!")
-	read(ch)
+	ch1 := make(chan string)
+	ch2 := make(chan string)
 
+	go process(ch1)
+	go replicate(ch2)
+
+	for i := 0; i < 2; i++ {
+		select {
+		case process := <-ch1:
+			fmt.Println(process)
+		case replicate := <-ch2:
+			fmt.Println(replicate)
+		}
+	}
+}
+
+func process(ch chan string)  {
+	time.Sleep(3 * time.Second)
+	ch <- "Done processing!"
+}
+
+func replicate(ch chan string)  {
+	time.Sleep(1 * time.Second)
+	ch <- "Done replicating!"
 }
 
 // it's a channel to only receive data
