@@ -5,12 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand"
+	"time"
+
 	// "log"
 	"math"
 	"net/http"
 	"os"
 	"strings"
-	"time"
 	// "log"
 )
 
@@ -77,28 +79,54 @@ type Employee1 struct {
 }
 
 func main()  {
-	ch := make(chan string)
-
 	start := time.Now()
-	apis := []string{
-		"https://management.azure.com",
-		"https://dev.azure.com",
-		"https://api.github.com",
-		"https://outlook.office.com/",
-		"https://api.somewhereintheinternet.com/",
-		"https://graph.microsoft.com",
+
+	size := 15
+	ch := make(chan string, size)
+
+	for i := 0; i < size; i++ {
+		go fib(float64(i), ch)
 	}
 
-	for _, api := range apis {
-		go checkAPI(api, ch)
-	}
-
-	for i := 0; i < len(apis); i++ {
-		fmt.Print(<-ch)
+	for i := 0; i < size; i++ {
+		fmt.Printf(<-ch)
 	}
 
 	elapsed := time.Since(start)
-	fmt.Printf("Done! It took %v seconds!\n", elapsed.Seconds())	
+	fmt.Printf("Done! It took %v seconds!\n", elapsed.Seconds())
+}
+
+func fib(number float64, ch chan string) {
+	x, y := 1.0, 1.0
+	for i := 0; i < int(number); i++ {
+		x, y = y, x+y
+	}
+
+	r := rand.Intn(3)
+	time.Sleep(time.Duration(r) * time.Second)
+
+	ch <- fmt.Sprintf("Fib(%v): %v\n", number, x)
+}
+
+func process(ch chan string)  {
+	time.Sleep(3 * time.Second)
+	ch <- "Done processing!"
+}
+
+func replicate(ch chan string)  {
+	time.Sleep(1 * time.Second)
+	ch <- "Done replicating!"
+}
+
+// it's a channel to only receive data
+func read(ch <-chan string)  {
+	fmt.Printf("Recceiving: %#v\n", <-ch)
+}
+
+// it's a channel to only send data
+func send(ch chan<- string, message string)  {
+	fmt.Printf("Sending:: %#v\n", message)
+	ch <- message
 }
 
 func checkAPI(api string, ch chan string)  {
